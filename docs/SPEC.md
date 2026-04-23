@@ -181,8 +181,8 @@ source of truth — every call site must pass `schema_version="0.4.0"`
 explicitly. Published JSON Schema (`companyctx schema`) lists
 `schema_version` in the `required` array.
 
-Adding an optional envelope field is a PATCH (no `schema_version` bump);
-Any change to the closed `EnvelopeError.code` Literal — adding,
+Adding an optional envelope field is a PATCH (no `schema_version`
+bump). Any change to the closed `EnvelopeError.code` Literal — adding,
 renaming, or removing — bumps `schema_version`. In the pre-1.0 (0.x)
 series all three land as a MINOR bump; rename and removal are called
 out as BREAKING in the CHANGELOG so downstream consumers see the break

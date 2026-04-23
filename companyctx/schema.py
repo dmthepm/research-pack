@@ -151,8 +151,11 @@ class EnvelopeError(BaseModel):
     Agents branch on :attr:`code`; humans read :attr:`message`. :attr:`suggestion`
     is an actionable next step (e.g. "configure COMPANYCTX_SMART_PROXY_URL").
 
-    Codes are a closed set. New codes are added in minor releases and bump
-    :data:`SCHEMA_VERSION`; removing or renaming a code is a major bump.
+    Codes are a closed set. Adding, renaming, or removing a code all bump
+    :data:`SCHEMA_VERSION`. In the pre-1.0 (0.x) series, any closed-set
+    change — additive or breaking — lands as a MINOR bump; rename and
+    removal are called out as BREAKING in CHANGELOG. Post-1.0, renames
+    and removals will require a MAJOR bump.
     """
 
     model_config = ConfigDict(extra="forbid")
