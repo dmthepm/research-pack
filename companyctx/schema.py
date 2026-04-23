@@ -6,22 +6,20 @@ Every model sets ``extra="forbid"`` so schema drift is loud. See
 frozen spec snapshot.
 
 v0.2.0 introduced the schema-locked envelope (top-level ``schema_version``
-plus structured :class:`EnvelopeError`). v0.3.0 adds two error codes:
+plus structured :class:`EnvelopeError`). v0.3.0 added two error codes:
 ``empty_response`` (so agents can branch on "site returned HTTP 200 with
 effectively no content" instead of mistaking a silent-success for ok data)
 and ``cache_corrupted`` (emitted on the ``--from-cache`` CLI path when the
-cache opens but the row can't be deserialized). v0.4.0 keeps the same
-Literal set but bumps ``SCHEMA_VERSION`` to close the drift the cache
-merge introduced (added ``cache_corrupted`` to the Literal without
-bumping the version constant), and lands alongside the COX-52 FM-7
+cache opens but the row can't be deserialized). v0.4.0 closes the schema-
+version drift the cache merge introduced, lands alongside the COX-52 FM-7
 floor correction (``EMPTY_RESPONSE_BYTES`` 64 → 1024 — same ``Literal``
 members, tighter threshold for ``empty_response``) and the COX-49
 NXDOMAIN routing fix (``unsafe_url:dns_resolve_failure`` →
 ``no_provider_succeeded`` instead of ``ssrf_rejected``; no Literal
-change, classifier-only). Per the closed-set rule, any observable
-change in what ``error.code`` an agent can receive on the same input
-is a minor schema bump — not because the Literal set grew but because
-the mapping from input to code did.
+change, classifier-only), and renames ``path_traversal_rejected`` →
+``fixture_path_traversal_rejected`` to match the code's actual scope
+(``--mock`` fixture-slug escapes only; it does not guard URL-path
+traversal).
 """
 
 from __future__ import annotations
@@ -40,7 +38,7 @@ EnvelopeErrorCode = Literal[
     "ssrf_rejected",
     "network_timeout",
     "blocked_by_antibot",
-    "path_traversal_rejected",
+    "fixture_path_traversal_rejected",
     "response_too_large",
     "no_provider_succeeded",
     "misconfigured_provider",

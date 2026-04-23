@@ -239,7 +239,7 @@ def test_orchestrator_graceful_partial_on_missing_fixture() -> None:
     provider_error = env.provenance["site_text_trafilatura"].error
     assert provider_error is not None
     assert "fixture" in provider_error
-    assert env.error.code in {"no_provider_succeeded", "path_traversal_rejected"}
+    assert env.error.code in {"no_provider_succeeded", "fixture_path_traversal_rejected"}
 
 
 @pytest.mark.parametrize(

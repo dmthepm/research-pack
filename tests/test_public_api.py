@@ -58,19 +58,22 @@ def test_top_level_literal_aliases_expose_expected_members() -> None:
     assert "not_configured" in get_args(ProviderStatus)
     assert "press" in get_args(MentionKind)
     assert "award" in get_args(MentionKind)
-    # Every v0.3 error code must stay re-exported. ``empty_response`` is
-    # the v0.3 addition — COX-44 / #79.
+    # Every v0.4 error code must stay re-exported. ``fixture_path_traversal_rejected``
+    # is the v0.4 rename of ``path_traversal_rejected`` — COX-50 / #87.
     for code in (
         "ssrf_rejected",
         "network_timeout",
         "blocked_by_antibot",
-        "path_traversal_rejected",
+        "fixture_path_traversal_rejected",
         "response_too_large",
         "no_provider_succeeded",
         "misconfigured_provider",
         "empty_response",
+        "cache_corrupted",
     ):
         assert code in get_args(EnvelopeErrorCode), code
+    # Old name must not leak back in — consumers must switch to the new code.
+    assert "path_traversal_rejected" not in get_args(EnvelopeErrorCode)
 
 
 def test_package_version_is_current() -> None:

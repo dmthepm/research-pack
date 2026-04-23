@@ -627,9 +627,9 @@ def _classify_error_code(
     if "unsafe_url" in lower or "unsupported scheme" in lower or "invalid site" in lower:
         return "ssrf_rejected"
     if "fixture path escapes" in lower or "fixture file escapes" in lower:
-        return "path_traversal_rejected"
+        return "fixture_path_traversal_rejected"
     if "invalid fixture slug" in lower:
-        return "path_traversal_rejected"
+        return "fixture_path_traversal_rejected"
     if "response_too_large" in lower:
         return "response_too_large"
     if "timeout" in lower:
