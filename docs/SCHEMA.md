@@ -8,6 +8,11 @@ backwards-compatible; removing or renaming a field — or changing the shape of
 an existing one — is a schema-version bump. Always branch on the top-level
 `schema_version` field to detect envelope evolution.
 
+v0.4.0 renames `path_traversal_rejected` →
+`fixture_path_traversal_rejected` to match the validator's actual scope
+(the code only fires for `--mock` fixture-slug escapes; URL-path
+traversal is not guarded). Renaming a code in the closed Literal is
+schema-breaking; v0.4.0 is the minor bump from v0.3.0 carrying it.
 v0.3.0 added two error codes to the closed `EnvelopeError.code` Literal:
 `empty_response` (the silent-success-on-empty gate) and `cache_corrupted`
 (emitted on `--from-cache` when the cache opens but the row can't be
@@ -61,7 +66,7 @@ class EnvelopeError(BaseModel):
         "ssrf_rejected",
         "network_timeout",
         "blocked_by_antibot",
-        "path_traversal_rejected",
+        "fixture_path_traversal_rejected",
         "response_too_large",
         "no_provider_succeeded",
         "misconfigured_provider",
@@ -74,8 +79,13 @@ class EnvelopeError(BaseModel):
 
 Agents should branch on `error.code`; humans read `error.message`.
 `suggestion` is *actionable*: `"configure a smart-proxy provider key"`,
-`"skip this prospect"`. Additional codes are added in minor releases and bump
-`schema_version`; removing or renaming a code is a major bump.
+`"skip this prospect"`. Any closed-set change — adding, renaming, or
+removing a code — bumps `schema_version`. In the pre-1.0 (0.x) series
+all three land as a MINOR bump; rename and removal are called out as
+BREAKING in the CHANGELOG so downstream consumers see the break
+explicitly. A mapping-only change that makes the same input land on a
+different `error.code` is also a MINOR bump. Post-1.0, renames and
+removals will require a MAJOR bump.
 
 ### Example — `ok`
 

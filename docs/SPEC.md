@@ -102,9 +102,18 @@ Status semantics:
   failure; `error.suggestion` names the next action.
 
 `EnvelopeError.code` is one of `ssrf_rejected | network_timeout |
-blocked_by_antibot | path_traversal_rejected | response_too_large |
+blocked_by_antibot | fixture_path_traversal_rejected | response_too_large |
 no_provider_succeeded | misconfigured_provider | empty_response |
 cache_corrupted`. See `docs/SCHEMA.md` for the shape.
+
+#### `empty_response` (v0.3, floor raised in v0.4.0)
+`fixture_path_traversal_rejected` fires **only** on the `--mock` fixture
+path when the slug escapes `fixtures_dir` (e.g. `companyctx fetch
+"../etc/passwd" --mock`). A live fetch whose URL path contains `../`
+is not guarded by this code — URL-path traversal is out of scope in
+v0.4 (tracking via a follow-up issue if required). The v0.3 code name
+`path_traversal_rejected` implied broader coverage than the validator
+delivered; the rename in v0.4 matches the code to its actual scope.
 
 #### `empty_response` (v0.3, floor raised in v0.4.0)
 
@@ -173,13 +182,18 @@ explicitly. Published JSON Schema (`companyctx schema`) lists
 `schema_version` in the `required` array.
 
 Adding an optional envelope field is a PATCH (no `schema_version` bump);
-adding or renaming an `EnvelopeError.code` is a MINOR bump; changing
-the input → code mapping without adding/renaming codes is also a MINOR
-bump (agents see different behavior for the same input); changing or
-removing an existing field is a MAJOR bump. v0.3.0 added the
-`empty_response` and `cache_corrupted` codes (minor bump from v0.2.0).
-v0.4.0 bumps for two code-mapping changes that keep the Literal set
-constant: the COX-52 FM-7 floor raise (`empty_response` now fires at
+Any change to the closed `EnvelopeError.code` Literal — adding,
+renaming, or removing — bumps `schema_version`. In the pre-1.0 (0.x)
+series all three land as a MINOR bump; rename and removal are called
+out as BREAKING in the CHANGELOG so downstream consumers see the break
+explicitly. A mapping-only change that makes the same input land on a
+different `error.code` is also a MINOR bump. Post-1.0, renames and
+removals will require a MAJOR bump. Changing or removing a non-Literal
+envelope field is always a MAJOR bump. v0.3.0 added the
+`empty_response` and `cache_corrupted` codes to the closed set. v0.4.0
+renames `path_traversal_rejected` → `fixture_path_traversal_rejected`
+to match the validator's actual scope and also carries two mapping-only
+changes: the COX-52 FM-7 floor raise (`empty_response` now fires at
 <1024 UTF-8 bytes, not <64) and the COX-49 NXDOMAIN routing fix
 (`unsafe_url:dns_resolve_failure` now routes to
 `no_provider_succeeded` rather than `ssrf_rejected`). v0.1 envelopes

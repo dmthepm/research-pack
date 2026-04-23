@@ -5,13 +5,14 @@ values deterministically and capture the resulting envelope.
 Two of the codes (``ssrf_rejected``, ``no_provider_succeeded``) fire
 through the public CLI on cold inputs. The remaining five
 (``network_timeout``, ``blocked_by_antibot``, ``response_too_large``,
-``path_traversal_rejected``, ``misconfigured_provider``) need either a
-slow / blocked / oversize upstream, a malicious ``--mock`` slug, or an
-already-failed primary provider — all brittle to reproduce from CLI
-alone. This harness drives ``companyctx.core.run`` with a synthetic
-``ProviderBase`` that emits the exact prefix string the production
-classifier reads (``companyctx/core.py:_classify_error_code``), plus
-the real fixture-path validator for ``path_traversal_rejected``.
+``fixture_path_traversal_rejected``, ``misconfigured_provider``) need
+either a slow / blocked / oversize upstream, a malicious ``--mock``
+slug, or an already-failed primary provider — all brittle to reproduce
+from CLI alone. This harness drives ``companyctx.core.run`` with a
+synthetic ``ProviderBase`` that emits the exact prefix string the
+production classifier reads (``companyctx/core.py:_classify_error_code``),
+plus the real fixture-path validator for
+``fixture_path_traversal_rejected``.
 
 The point is not to test internal code paths — those are covered in
 ``tests/test_envelope_error_codes.py``. The point is to give an
@@ -181,13 +182,13 @@ def trigger_all() -> list[dict]:
         )
     )
 
-    # Case 6 — path_traversal_rejected — real fixture-path validator
+    # Case 6 — fixture_path_traversal_rejected — real fixture-path validator
     env = core.run("../etc/passwd", mock=True, fixtures_dir="fixtures")
     rows.append(
         _envelope_to_row(
-            "path_traversal_rejected (fixture slug ..)",
+            "fixture_path_traversal_rejected (fixture slug ..)",
             env,
-            "path_traversal_rejected",
+            "fixture_path_traversal_rejected",
             "real-stack-mock",
         )
     )
