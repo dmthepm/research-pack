@@ -39,11 +39,10 @@ Read the JSON. Pay special attention to:
   - data.pages.services       (what they sell)
   - data.pages.tech_stack     (how they operate)
   - data.pages.homepage_text  (their positioning)
-  - data.reviews              (market reputation — null in v0.2 until a
-                               direct-API provider is configured)
+  - data.reviews              (market reputation — null unless a review
+                               provider is configured)
   - data.signals              (copyright year, team size, cadence — null
-                               in v0.2 until the site-heuristic provider
-                               ships)
+                               until the site-heuristic provider ships)
 
 Write a 3-sentence cold email pitching our generic AI-automation
 services. Reference exactly one specific piece of their tech stack or

@@ -17,14 +17,12 @@
 #
 # Tune the thresholds for your thesis; the shape is what matters.
 #
-# NOTE for v0.2: this thesis reads `data.reviews` and `data.signals`,
-# which are null in v0.2 until the direct-API and site-heuristic
-# providers register (see docs/SPEC.md — reviews_google_places is
-# tracked under #7). Against the shipped zero-key provider the
-# screener will return 0 candidates today. The shape is deliberately
-# preserved — once a review provider is configured (export
-# GOOGLE_PLACES_API_KEY and drop --mock), the same filter starts
-# producing hits without any change to this script.
+# NOTE: this thesis reads `data.reviews` and `data.signals`. On the
+# current mock baseline those slots are still null, so the screener
+# returns 0 candidates. The shape is deliberately preserved — once a
+# review provider is configured (export `GOOGLE_PLACES_API_KEY` and
+# drop `--mock`), the same filter starts producing hits without any
+# change to this script.
 #
 # Requires: jq
 # Usage:    ./05-pe-rollup-screener.sh          # uses embedded demo list
@@ -90,7 +88,7 @@ echo "Done. $HITS candidate(s) matched the thesis."
 echo "Next: hand the hits to a human analyst for diligence, or pipe into"
 echo "      a brief-generation step (see 03-brains-and-muscles.sh)."
 
-# --- EXPECTED OUTPUT (v0.2, --mock) ---
+# --- EXPECTED OUTPUT (current mock baseline) ---
 # 🔍 Screening for rollup candidates
 #    thesis: rating ≥ 4.5, ≥ 75 reviews, WordPress, copyright ≤ 2023
 # --------------------------------------------------------------------
@@ -100,9 +98,8 @@ echo "      a brief-generation step (see 03-brains-and-muscles.sh)."
 #       a brief-generation step (see 03-brains-and-muscles.sh).
 #
 # Reason: the thesis filters on data.reviews.* and data.signals.*,
-# which are null in v0.2 (see header note). Once a review provider is
-# registered + configured the filter starts producing hits against
-# the fixture corpus:
+# which are null on the current mock baseline (see header note). Once a
+# review provider is configured the filter starts producing hits:
 #
 # ✅ acme-bakery         | 4.6★ × 142 reviews | stack: WordPress,Elementor | copyright 2023
 # ✅ cornerstone-bakery  | 4.7★ ×  96 reviews | stack: WordPress,WooCommerce | copyright 2022

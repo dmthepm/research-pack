@@ -24,7 +24,7 @@ else
   companyctx fetch "$SITE" --mock --json
 fi
 
-# --- EXPECTED OUTPUT (v0.2 envelope, keys sorted by the CLI) ---
+# --- EXPECTED OUTPUT (current envelope, keys sorted by the CLI) ---
 # {
 #   "data": {
 #     "fetched_at": "2026-04-22T18:44:05.810816Z",
@@ -50,11 +50,11 @@ fi
 #       "status": "ok"
 #     }
 #   },
-#   "schema_version": "0.4.0",
+#   "schema_version": "0.5.0",
 #   "status": "ok"
 # }
 #
-# Note: v0.2 ships one Attempt-1 provider (site_text_trafilatura), so
-# `data.reviews` / `data.social` / `data.signals` / `data.mentions` are
-# reserved in the schema but return null. Direct-API providers that
-# populate those slots are on the roadmap — see docs/SPEC.md.
+# Note: the default mock path exercises the zero-key baseline, so
+# `data.reviews` / `data.social` / `data.signals` / `data.mentions`
+# still read null here. Those slots remain schema-stable and fill as
+# their providers are configured or shipped — see docs/SPEC.md.

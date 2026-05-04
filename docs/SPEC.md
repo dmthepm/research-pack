@@ -8,11 +8,11 @@
 >
 > Shape edits land upstream and flow back via a new handoff cycle. Shipped-vs-
 > deferred state (which commands / flags / providers are wired today) is
-> refreshed with each release — this file is current as of `v0.4.0`.
+> refreshed with each release — this file is current as of `v0.5.0`.
 
 ---
 
-# companyctx — spec (v0.4)
+# companyctx — spec (v0.5)
 
 ## Purpose
 
@@ -80,7 +80,7 @@ around a crash.
 
 ```
 {
-  "schema_version": "0.4.0",       // top-level shape discriminator
+  "schema_version": "0.5.0",       // top-level shape discriminator
   "status": "ok" | "partial" | "degraded",
   "data":   CompanyContext,        // the schema payload (always present, may
                                    //   have nullable fields on partial)
@@ -106,14 +106,13 @@ blocked_by_antibot | fixture_path_traversal_rejected | response_too_large |
 no_provider_succeeded | misconfigured_provider | empty_response |
 cache_corrupted`. See `docs/SCHEMA.md` for the shape.
 
-#### `empty_response` (v0.3, floor raised in v0.4.0)
 `fixture_path_traversal_rejected` fires **only** on the `--mock` fixture
 path when the slug escapes `fixtures_dir` (e.g. `companyctx fetch
 "../etc/passwd" --mock`). A live fetch whose URL path contains `../`
 is not guarded by this code — URL-path traversal is out of scope in
-v0.4 (tracking via a follow-up issue if required). The v0.3 code name
+v0.5 (tracking via a follow-up issue if required). The v0.3 code name
 `path_traversal_rejected` implied broader coverage than the validator
-delivered; the rename in v0.4 matches the code to its actual scope.
+delivered; the rename in v0.5 matches the code to its actual scope.
 
 #### `empty_response` (v0.3, floor raised in v0.4.0)
 
@@ -159,6 +158,11 @@ block was the reason to retry; the empty proxy body is what the
 pipeline actually ended on. Per-provider rows still carry their own
 error strings in `provenance[slug].error` for full traceability.
 
+If any parallel provider still succeeds — for example
+`reviews_google_places` populates `data.reviews` while
+`site_text_trafilatura` fails empty — the top-level envelope status is
+`partial`, not `degraded`.
+
 Automatic proxy retry on an Attempt-1 `empty_response` failure is
 intentionally out of scope: the smart-proxy recovery path skips
 primary rows tagged `empty_response` (the zero-key fetch already
@@ -167,7 +171,7 @@ invent content). Agents decide whether to retry upstream.
 
 ### `schema_version`
 
-Every envelope carries a top-level `schema_version: Literal["0.4.0"]`.
+Every envelope carries a top-level `schema_version: Literal["0.5.0"]`.
 Agents branch on shape by reading this field directly — no substring-
 parsing an error string.
 
@@ -177,7 +181,7 @@ empty-string `schema_version` fails validation at parse time with a
 envelopes (which lack the field entirely, or carry the older `"0.2.0"`
 literal) silently validate as current, defeating the point of a shape
 discriminator. The constructor signature in `companyctx/schema.py` is the
-source of truth — every call site must pass `schema_version="0.4.0"`
+source of truth — every call site must pass `schema_version="0.5.0"`
 explicitly. Published JSON Schema (`companyctx schema`) lists
 `schema_version` in the `required` array.
 
@@ -190,9 +194,9 @@ explicitly. A mapping-only change that makes the same input land on a
 different `error.code` is also a MINOR bump. Post-1.0, renames and
 removals will require a MAJOR bump. Changing or removing a non-Literal
 envelope field is always a MAJOR bump. v0.3.0 added the
-`empty_response` and `cache_corrupted` codes to the closed set. v0.4.0
+`empty_response` and `cache_corrupted` codes to the closed set. v0.5.0
 renames `path_traversal_rejected` → `fixture_path_traversal_rejected`
-to match the validator's actual scope and also carries two mapping-only
+to match the validator's actual scope. v0.4.0 carried two mapping-only
 changes: the COX-52 FM-7 floor raise (`empty_response` now fires at
 <1024 UTF-8 bytes, not <64) and the COX-49 NXDOMAIN routing fix
 (`unsafe_url:dns_resolve_failure` now routes to

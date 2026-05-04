@@ -8,22 +8,35 @@ own provider, discovered at runtime via Python entry points under the
 Providers sit on the [Deterministic Waterfall](ARCHITECTURE.md) and all return
 the same envelope shape (see [`docs/SCHEMA.md`](SCHEMA.md)).
 
-## Day-one providers (v0.1)
+## Registered today
 
-| Slug                       | Waterfall layer | Category         | Key needed            | Cost hint | M1 | M3 |
-|----------------------------|-----------------|------------------|-----------------------|-----------|----|----|
-| `site_text_trafilatura`    | Zero-key        | `site_text`      | —                     | free      | stub | ✓ |
-| `site_text_readability`    | Zero-key        | `site_text`      | —                     | free      | stub | ✓ |
-| `site_meta_extruct`        | Zero-key        | `site_meta`      | —                     | free      | stub | ✓ |
-| `social_discovery_site`    | Zero-key        | `social_discovery` | —                   | free      | stub | ✓ |
-| `signals_site_heuristic`   | Zero-key        | `signals`        | —                     | free      | stub | ✓ |
-| `reviews_google_places`    | Direct-API      | `reviews`        | `GOOGLE_PLACES_API_KEY` | per-1k | stub | ✓ *(shipped v0.3)* |
-| `reviews_yelp_fusion`      | Direct-API      | `reviews`        | `YELP_API_KEY`        | per-call | stub | ✓ |
-| `social_counts_youtube`    | Direct-API      | `social_counts`  | `YOUTUBE_API_KEY`     | free w/ quota | stub | ✓ |
-| `mentions_brave_stub`      | Direct-API      | `mentions`       | `BRAVE_SEARCH_API_KEY`| per-call | stub | stub |
+These are the providers a stock install can actually surface via
+`companyctx providers list --json` today:
 
-`companyctx providers list` surfaces the table above at runtime, filtered to
-which providers are actually configured on the user's machine.
+| Slug                    | Waterfall layer | Category       | Key needed                   | Cost hint | Runtime status |
+|-------------------------|-----------------|----------------|------------------------------|-----------|----------------|
+| `site_text_trafilatura` | Zero-key        | `site_text`    | —                            | free      | shipped |
+| `smart_proxy_http`      | Smart-proxy     | `smart_proxy`  | `COMPANYCTX_SMART_PROXY_URL` | per-call  | shipped |
+| `reviews_google_places` | Direct-API      | `reviews`      | `GOOGLE_PLACES_API_KEY`      | per-1k    | shipped |
+
+`companyctx providers list` surfaces the registered set above at runtime,
+annotated with each provider's local config status (`ready` /
+`not_configured`).
+
+## Candidate / deferred providers
+
+These names are design-space placeholders or future-provider candidates,
+not a promise that the modules are implemented or registered today:
+
+| Slug                    | Waterfall layer | Category            | Current posture |
+|-------------------------|-----------------|---------------------|-----------------|
+| `site_text_readability` | Zero-key        | `site_text`         | bus-factor fallback candidate |
+| `site_meta_extruct`     | Zero-key        | `site_meta`         | deferred |
+| `social_discovery_site` | Zero-key        | `social_discovery`  | deferred |
+| `signals_site_heuristic`| Zero-key        | `signals`           | deferred |
+| `reviews_yelp_fusion`   | Direct-API      | `reviews`           | candidate |
+| `social_counts_youtube` | Direct-API      | `social_counts`     | candidate |
+| `mentions_brave_stub`   | Direct-API      | `mentions`          | stub candidate |
 
 ## The `SmartProxyProvider` interface
 
@@ -59,7 +72,7 @@ zero-key path — the schema doesn't know which layer produced the bytes.
 extras after the measurement spike, but they're interchangeable — swap the
 entry-point line in `pyproject.toml` or override at runtime.
 
-> **v0.1.x status.** Two modules ship today:
+> **Current status.** Two modules cover Attempt 2 today:
 >
 > - `companyctx/providers/smart_proxy_base.py` — the `SmartProxyProvider`
 >   Protocol.
@@ -164,7 +177,7 @@ Full rules in [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
 Stubs for the day-one providers land in Milestone 3.
 
-## Out-of-scope providers (v0.1)
+## Out-of-scope providers
 
 - LinkedIn / Crunchbase enrichment. Out of scope — that's people-data or
   duplicates Apollo/Clearbit territory.

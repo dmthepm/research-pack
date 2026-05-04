@@ -31,19 +31,14 @@ companyctx fetch <domain> --json
 CRM payload, diff-and-alert, agent-prompt injection. The muscle is
 always the same; the orchestration around it is what changes.
 
-### What to expect on v0.2
+### What to expect today
 
-v0.2 ships the zero-key Attempt 1 (`site_text_trafilatura`) and the
-user-keyed smart-proxy Attempt 2 (`smart_proxy_http`). That means live
-and `--mock` runs populate `data.pages.*` and leave
-`data.reviews` / `data.social` / `data.signals` / `data.mentions` as
-`null` until the direct-API and site-heuristic providers register
-(roadmap — see [`../docs/SPEC.md`](../docs/SPEC.md)). Every recipe in
-this gallery is coded against the stable envelope shape with
-fallbacks for the null slots; nothing breaks when a provider
-registers, it just starts populating the field. A recipe's "expected
-output" block flags which lines are v0.2 reality vs. what will start
-appearing once direct-API providers ship.
+Today the default paths populate `data.pages.*`, and `data.reviews`
+can populate when `reviews_google_places` is configured. `data.social`,
+`data.signals`, and `data.mentions` remain mostly null until their
+providers land. Every recipe in this gallery is coded against the
+stable envelope shape with fallbacks for missing slots; nothing
+downstream needs a rewrite when a new provider starts filling a field.
 
 ## How this folder is built
 
@@ -59,9 +54,10 @@ appearing once direct-API providers ship.
    than a single file (webhook harnesses, multi-step pipelines), it
    lives in its own folder with a `README.md` using the
    Problem / Solution / Run-it format.
-5. **Bit-rot-resistant.** The bash examples double as integration
-   tests — a CI job re-runs them on every push and fails the build on
-   non-zero exit. Schema drift breaks the gallery loudly.
+5. **Designed to be bit-rot-resistant.** The gallery is written so each
+   recipe is runnable in isolation. Dedicated examples CI is still
+   tracked separately in #60; until that lands, treat the expected-output
+   blocks as the review surface.
 
 ## The gallery
 
@@ -75,7 +71,7 @@ appearing once direct-API providers ship.
 | [`06-competitor-monitor.py`](06-competitor-monitor.py) | Daily JSON diff + change alert | Founders, PMMs |
 | [`07-inbound-webhook-enrichment/`](07-inbound-webhook-enrichment/) | Webhook → domain → CRM payload | RevOps, growth |
 | [`08-support-ticket-context.py`](08-support-ticket-context.py) | Inject customer context into a support-agent prompt | CS, AI-support builders |
-| [`partner-integration.md`](partner-integration.md) | Drop-in replacement for the "LLM reads HTML" step in a partner cold-outreach pipeline | Outbound operators |
+| [`../docs/PARTNER-INTEGRATION.md`](../docs/PARTNER-INTEGRATION.md) | Canonical downstream integration contract for replacing the "LLM reads HTML" step | Operators integrating the envelope |
 
 ## The four use cases the gallery covers
 

@@ -45,7 +45,7 @@ case "$STATUS" in
   degraded) echo "❌ primary fetch blocked — see .error.code / .error.suggestion" ;;
 esac
 
-# --- EXPECTED OUTPUT (v0.2 — pages populated, other slots null) ---
+# --- EXPECTED OUTPUT (current mock baseline — pages populated, other slots null) ---
 # === Just the services and tech stack ===
 # {
 #   "site": "acme-bakery",
@@ -54,7 +54,7 @@ esac
 # }
 #
 # === Social handles as a flat list ===
-# (empty — data.social is null until a social-discovery provider ships)
+# (empty — data.social is still null on the current mock baseline)
 #
 # === Review summary, or a fallback string if unavailable ===
 # no review data for this provider set
@@ -62,8 +62,7 @@ esac
 # === Branch on status — the pipeline contract ===
 # ✅ complete envelope — safe to synthesize
 #
-# Note: v0.2 ships the zero-key Attempt 1 only. The review / social
-# branches above are the exact fallbacks your pipeline should rely on —
-# they kick in whenever a slot's provider isn't configured or hasn't
-# been written yet. The jq pipe is identical under live runs once the
-# direct-API providers register; no pipeline rewrite needed.
+# Note: the review / social branches above are the exact fallbacks your
+# pipeline should rely on — they kick in whenever a slot's provider
+# isn't configured or hasn't landed yet. The jq pipe does not change as
+# more providers start populating fields.

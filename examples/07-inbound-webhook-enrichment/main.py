@@ -114,7 +114,7 @@ if __name__ == "__main__":
     main()
 
 
-# --- EXPECTED OUTPUT (v0.2, demo event with --mock) ---
+# --- EXPECTED OUTPUT (current mock baseline, demo event) ---
 # {
 #   "crm_payload": {
 #     "company_domain": "acme-bakery",
@@ -133,9 +133,8 @@ if __name__ == "__main__":
 # }
 #
 # Note: primary_services + tech_stack_detected come from the shipped
-# zero-key provider. review_* / social_handles / team_size_claim /
-# copyright_year are null in v0.2 because the direct-API and
-# site-heuristic providers that populate them aren't registered yet
-# (see docs/SPEC.md — Google Places is tracked under #7). The CRM
-# payload's field map is deliberately stable; when a provider ships,
-# the null fields start filling in without any code change.
+# zero-key provider. `review_*` / `social_handles` / `team_size_claim` /
+# `copyright_year` are still null on the current mock baseline. The CRM
+# payload's field map is deliberately stable; once those providers are
+# configured or shipped, the null fields start filling in without any
+# code change.
