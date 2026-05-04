@@ -38,7 +38,7 @@ jobs:
         run: ruff format --check .
 
       - name: Mypy (strict)
-        run: mypy companyctx
+        run: mypy companyctx tests
 
       - name: Pytest with coverage
         run: pytest tests/ -v --cov=companyctx --cov-report=term-missing --cov-fail-under=70
