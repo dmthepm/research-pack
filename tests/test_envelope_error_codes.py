@@ -101,15 +101,15 @@ def test_blocked_by_antibot_code_from_robots_block() -> None:
     assert _run_with_error("blocked_by_robots") == "blocked_by_antibot"
 
 
-def test_path_traversal_rejected_code_from_escape_error() -> None:
+def test_fixture_path_traversal_rejected_code_from_escape_error() -> None:
     assert (
         _run_with_error("fixture path escapes fixtures_dir: /etc/passwd")
-        == "path_traversal_rejected"
+        == "fixture_path_traversal_rejected"
     )
 
 
-def test_path_traversal_rejected_code_from_invalid_slug() -> None:
-    assert _run_with_error("invalid fixture slug: '../'") == "path_traversal_rejected"
+def test_fixture_path_traversal_rejected_code_from_invalid_slug() -> None:
+    assert _run_with_error("invalid fixture slug: '../'") == "fixture_path_traversal_rejected"
 
 
 def test_response_too_large_code_from_cap_error() -> None:

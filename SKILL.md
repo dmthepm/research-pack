@@ -28,9 +28,10 @@ company so an agent can reason about it, rather than reading raw HTML.
 - Every envelope carries `schema_version`. v0.4 is `"0.4.0"`.
 - When `status != "ok"`, `error` is a structured `{code, message, suggestion}`;
   switch on `error.code` (one of `ssrf_rejected | network_timeout |
-  blocked_by_antibot | path_traversal_rejected | response_too_large |
+  blocked_by_antibot | fixture_path_traversal_rejected | response_too_large |
   no_provider_succeeded | misconfigured_provider | empty_response |
-  cache_corrupted`).
+  cache_corrupted`). `fixture_path_traversal_rejected` only fires on the
+  `--mock` fixture path — URL-path traversal is not guarded by this code.
 - Pipe stdout; don't parse logs. The JSON envelope is the contract.
 - The `data.site` field is the identifier; `data.pages` holds homepage-
   derived content (`homepage_text`, `about_text`, `services`, `tech_stack`).
