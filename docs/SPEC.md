@@ -106,6 +106,8 @@ blocked_by_antibot | fixture_path_traversal_rejected | response_too_large |
 no_provider_succeeded | misconfigured_provider | empty_response |
 cache_corrupted`. See `docs/SCHEMA.md` for the shape.
 
+#### `fixture_path_traversal_rejected` (renamed in v0.5.0)
+
 `fixture_path_traversal_rejected` fires **only** on the `--mock` fixture
 path when the slug escapes `fixtures_dir` (e.g. `companyctx fetch
 "../etc/passwd" --mock`). A live fetch whose URL path contains `../`
