@@ -25,7 +25,7 @@ company so an agent can reason about it, rather than reading raw HTML.
 
 - Companies only. Never extract people data.
 - Branch on `status` (`ok | partial | degraded`), not on try/except.
-- Every envelope carries `schema_version`. v0.4 is `"0.4.0"`.
+- Every envelope carries `schema_version`. v0.5 is `"0.5.0"`.
 - When `status != "ok"`, `error` is a structured `{code, message, suggestion}`;
   switch on `error.code` (one of `ssrf_rejected | network_timeout |
   blocked_by_antibot | fixture_path_traversal_rejected | response_too_large |
@@ -36,8 +36,9 @@ company so an agent can reason about it, rather than reading raw HTML.
 - The `data.site` field is the identifier; `data.pages` holds homepage-
   derived content (`homepage_text`, `about_text`, `services`, `tech_stack`).
 - `data.reviews` / `data.social` / `data.signals` / `data.mentions` are
-  reserved in the schema but stay `null` today — the providers that
-  fill them are deferred (see `docs/SPEC.md`). Schema-locked partials,
+  reserved in the schema. `data.reviews` can populate when
+  `reviews_google_places` is configured; the others remain deferred
+  today (see `docs/SPEC.md`). Null slots are schema-locked partials,
   not bugs.
 
 **Envelope shape.**
@@ -68,7 +69,7 @@ company so an agent can reason about it, rather than reading raw HTML.
       "status": "ok"
     }
   },
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "ok"
 }
 ```

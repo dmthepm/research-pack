@@ -11,7 +11,7 @@ git clone https://github.com/dmthepm/companyctx.git
 cd companyctx
 pip install -e ".[dev,extract,reviews,youtube]"
 ruff check .
-mypy companyctx
+mypy companyctx tests
 pytest -v --cov=companyctx
 ```
 

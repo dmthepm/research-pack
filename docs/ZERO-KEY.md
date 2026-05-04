@@ -60,7 +60,7 @@ When zero-key can't fully succeed, `companyctx` does not crash, does not
 
 ```json
 {
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "partial",
   "data": {
     "site": "example.com",

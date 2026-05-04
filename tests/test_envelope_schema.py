@@ -29,7 +29,7 @@ def _fixed_dt() -> datetime:
 
 def test_envelope_round_trips_through_json() -> None:
     env = Envelope(
-        schema_version="0.4.0",
+        schema_version="0.5.0",
         status="ok",
         data=CompanyContext(
             site="example.com",
@@ -71,7 +71,7 @@ def test_envelope_round_trips_through_json() -> None:
         (
             Envelope,
             {
-                "schema_version": "0.4.0",
+                "schema_version": "0.5.0",
                 "status": "ok",
                 "data": {"site": "x", "fetched_at": _fixed_dt().isoformat()},
                 "provenance": {},
@@ -132,14 +132,14 @@ def test_provider_run_metadata_is_frozen() -> None:
     [
         # status=partial but no structured error.
         {
-            "schema_version": "0.4.0",
+            "schema_version": "0.5.0",
             "status": "partial",
             "data": {"site": "x", "fetched_at": _fixed_dt().isoformat()},
             "provenance": {},
         },
         # status=degraded with a bare string in `error` (pre-v0.2 shape).
         {
-            "schema_version": "0.4.0",
+            "schema_version": "0.5.0",
             "status": "degraded",
             "data": {"site": "x", "fetched_at": _fixed_dt().isoformat()},
             "provenance": {},
@@ -147,7 +147,7 @@ def test_provider_run_metadata_is_frozen() -> None:
         },
         # status=ok must not carry an error.
         {
-            "schema_version": "0.4.0",
+            "schema_version": "0.5.0",
             "status": "ok",
             "data": {"site": "x", "fetched_at": _fixed_dt().isoformat()},
             "provenance": {},
@@ -167,12 +167,12 @@ def test_envelope_rejects_inconsistent_status_and_error(
 
 def test_envelope_schema_version_set_explicitly() -> None:
     env = Envelope(
-        schema_version="0.4.0",
+        schema_version="0.5.0",
         status="ok",
         data=CompanyContext(site="x", fetched_at=_fixed_dt()),
         provenance={},
     )
-    assert env.schema_version == "0.4.0"
+    assert env.schema_version == "0.5.0"
 
 
 def test_envelope_requires_schema_version_keyword() -> None:
@@ -194,7 +194,7 @@ def test_envelope_requires_schema_version_keyword() -> None:
         lambda body: body,
         # Field present but explicit JSON null.
         lambda body: {**body, "schema_version": None},
-        # Field present but empty string — fails the Literal["0.4.0"] check.
+        # Field present but empty string — fails the Literal["0.5.0"] check.
         lambda body: {**body, "schema_version": ""},
     ],
     ids=["missing_field", "null_value", "empty_string"],
@@ -243,7 +243,7 @@ def test_envelope_error_rejects_unknown_fields() -> None:
 
 def test_envelope_error_round_trips() -> None:
     env = Envelope(
-        schema_version="0.4.0",
+        schema_version="0.5.0",
         status="partial",
         data=CompanyContext(site="x", fetched_at=_fixed_dt()),
         provenance={},

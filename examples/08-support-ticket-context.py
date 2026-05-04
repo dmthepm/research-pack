@@ -131,7 +131,7 @@ if __name__ == "__main__":
     main()
 
 
-# --- EXPECTED OUTPUT (v0.2, demo ticket, --mock) ---
+# --- EXPECTED OUTPUT (current mock baseline, demo ticket) ---
 # ### Internal note (paste into Zendesk / Intercom / Freshdesk):
 # --- AUTOMATED CUSTOMER CONTEXT ---
 # Domain:           acme-bakery
@@ -151,6 +151,6 @@ if __name__ == "__main__":
 # }
 #
 # Note: "Team size claim" / "Social:" don't appear in the note when
-# data.signals / data.social are null (v0.2 default). Once a
-# site-heuristic / social-discovery provider registers, those lines
-# appear automatically — no script change.
+# data.signals / data.social are null on the current mock baseline.
+# Once those providers land, the lines appear automatically — no
+# script change.

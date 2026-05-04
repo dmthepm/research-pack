@@ -3,16 +3,16 @@
 The Pydantic v2 shape `companyctx` emits. The schema is the product — providers
 are replaceable, the contract is not.
 
-The envelope below is the v0.4.0 shape. Adding a new optional field is
+The envelope below is the v0.5.0 shape. Adding a new optional field is
 backwards-compatible; removing or renaming a field — or changing the shape of
 an existing one — is a schema-version bump. Always branch on the top-level
 `schema_version` field to detect envelope evolution.
 
-v0.4.0 renames `path_traversal_rejected` →
+v0.5.0 renames `path_traversal_rejected` →
 `fixture_path_traversal_rejected` to match the validator's actual scope
 (the code only fires for `--mock` fixture-slug escapes; URL-path
 traversal is not guarded). Renaming a code in the closed Literal is
-schema-breaking; v0.4.0 is the minor bump from v0.3.0 carrying it.
+schema-breaking; v0.5.0 is the minor bump carrying it.
 v0.3.0 added two error codes to the closed `EnvelopeError.code` Literal:
 `empty_response` (the silent-success-on-empty gate) and `cache_corrupted`
 (emitted on `--from-cache` when the cache opens but the row can't be
@@ -35,7 +35,7 @@ Every `companyctx fetch` invocation returns one wrapper around the payload:
 
 ```python
 class Envelope(BaseModel):
-    schema_version: Literal["0.4.0"]    # required — no default
+    schema_version: Literal["0.5.0"]    # required — no default
     status: Literal["ok", "partial", "degraded"]
     data: CompanyContext
     provenance: dict[str, ProviderRunMetadata]
@@ -122,7 +122,7 @@ Keys are shown in the alphabetical order the CLI emits
       "status": "ok"
     }
   },
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "ok"
 }
 ```
@@ -161,7 +161,7 @@ Keys are shown in the alphabetical order the CLI emits
       "status": "not_configured"
     }
   },
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "partial"
 }
 ```
@@ -188,10 +188,10 @@ Nothing else goes at the top level. People-data fields (contact,
 decision-maker, enrichment) are out of scope — that enrichment belongs
 upstream (Apollo / Clearbit / manual research).
 
-In v0.2, only `pages` populates on a live zero-key or smart-proxy run.
-`reviews` / `social` / `signals` / `mentions` stay `null` until their
-providers register (see `docs/SPEC.md` for the deferred-provider table
-and tracking issues).
+Today `pages` populates on the zero-key and smart-proxy paths.
+`reviews` can populate when `reviews_google_places` is configured;
+`social` / `signals` / `mentions` remain `null` until their providers
+land (see `docs/SPEC.md` for the shipped-vs-deferred table).
 
 ## Sub-models
 

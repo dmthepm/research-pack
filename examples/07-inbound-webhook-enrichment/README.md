@@ -24,10 +24,10 @@ only part that differs per integration).
 **What you get:** a deterministic, schema-locked JSON envelope you
 can version and diff, rather than a vendor's opaque result set.
 
-In v0.2 the CRM payload fills in `primary_services` +
-`tech_stack_detected` from the shipped zero-key provider; `review_*`,
-`social_handles`, `team_size_claim`, and `copyright_year` arrive null
-until the direct-API and site-heuristic providers register (see
+Today the CRM payload always fills in `primary_services` +
+`tech_stack_detected` from the zero-key provider. `review_*`,
+`social_handles`, `team_size_claim`, and `copyright_year` may still
+arrive null depending on which providers are configured (see
 [`../../docs/SPEC.md`](../../docs/SPEC.md)). The payload shape is
 stable; nothing downstream changes when those slots start filling in.
 

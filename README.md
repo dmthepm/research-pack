@@ -7,7 +7,7 @@
 **The deterministic B2B company context router. Zero keys. Schema-locked JSON your agent pipelines can actually trust.**
 
 ```bash
-pipx install companyctx   # v0.4.0 on PyPI — schema_version 0.4.0, SQLite cache, FM-7 floor
+pipx install companyctx   # current repo version: 0.5.0 — schema_version 0.5.0, cache, reviews, FM-7 floor
 companyctx fetch acme-bakery.com --json
 ```
 
@@ -37,7 +37,7 @@ companyctx fetch acme-bakery.com --json
       "status": "ok"
     }
   },
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "ok"
 }
 ```
@@ -48,19 +48,19 @@ versioned via a top-level `schema_version` field so agents can branch on
 shape without substring-parsing.
 
 `reviews` / `social` / `signals` / `mentions` are reserved in the
-`CompanyContext` schema; the providers that populate them (Google Places,
-YouTube Data, the site-heuristic provider) are roadmap work — see
-[Status](#status) below. Today a real run returns `pages.*` plus nulls,
-which is what the `--mock` fixture tree reproduces byte-for-byte.
+`CompanyContext` schema. Today `reviews` can populate when the
+`reviews_google_places` direct-API provider is configured; `social`,
+`signals`, and `mentions` remain deferred. The default `--mock` fixture
+tree still exercises the zero-key baseline shape byte-for-byte.
 
 ## Status
 
-`v0.4.0` is the current release. What's shipped:
+`v0.5.0` is the current repo version. What's shipped:
 
 - **Envelope contract** — `{schema_version, status, data, provenance, error?}`
   with `status ∈ {ok, partial, degraded}` and a structured `EnvelopeError`
   (`{code, message, suggestion}`) on non-`ok` runs. `extra="forbid"` on every
-  model. `schema_version` Literal is `"0.4.0"`. See [`docs/SCHEMA.md`](docs/SCHEMA.md).
+  model. `schema_version` Literal is `"0.5.0"`. See [`docs/SCHEMA.md`](docs/SCHEMA.md).
 - **Zero-key Attempt 1** — `site_text_trafilatura` (TLS-impersonated fetch
   via `curl_cffi` + trafilatura extraction). Populates `data.pages.*`
   (`homepage_text`, `about_text`, `services`, `tech_stack`). 20/20 envelope-`ok`
@@ -77,8 +77,9 @@ which is what the `--mock` fixture tree reproduces byte-for-byte.
   first-class `EnvelopeErrorCode`.
 - **FM-7 honesty contract** — `EMPTY_RESPONSE_BYTES` raised from 64 to
   1024 (COX-52 / #91). HTTP 200 with <1024 UTF-8 bytes of extracted text
-  now surfaces as `status: degraded + error.code: empty_response` instead
-  of silent `ok`.
+  now surfaces as `error.code: empty_response` instead of silent `ok`.
+  The top-level status is `partial` or `degraded` depending on whether
+  any parallel provider still succeeded.
 - **NXDOMAIN routed to `no_provider_succeeded`** — unresolvable hostnames
   are dead hosts, not SSRF attempts (COX-49 / #86).
 - **CLI verbs** — `fetch`, `schema` (emits Draft 2020-12 JSON Schema),
@@ -96,10 +97,11 @@ accepting them):
   in #9.
 - **`--config <path>` TOML loader** — stub; environment variables and
   defaults only today. Tracked in #9.
-- **Direct-API (Attempt 3) providers** — Google Places (tracking: #7),
-  Yelp Fusion, YouTube Data, Brave Search (mentions tracking: #58). Not
-  registered today; `data.reviews` / `data.social` / `data.mentions`
-  stay null on live runs until a direct-API provider lands.
+- **Direct-API (Attempt 3) providers beyond Google Places** — Yelp
+  Fusion, YouTube Data, Brave Search (mentions tracking: #58). Today
+  only `reviews_google_places` is registered; `data.social` /
+  `data.mentions` stay null until their providers land, and
+  `data.reviews` stays null unless Google Places is configured.
 - **Site-heuristic `signals` provider** — planned alongside the direct-API
   slate; populates `data.signals.copyright_year`, `last_blog_post_at`,
   `team_size_claim`.
@@ -183,7 +185,7 @@ On full block with no Attempt-2/3 providers configured:
     "suggestion": "configure a smart-proxy provider key or skip this prospect"
   },
   "provenance": { "site_text_trafilatura": { "cost_incurred": 0, "error": "blocked_by_antibot (HTTP 403)", "latency_ms": 842, "provider_version": "0.1.0", "status": "failed" } },
-  "schema_version": "0.4.0",
+  "schema_version": "0.5.0",
   "status": "partial"
 }
 ```
@@ -233,11 +235,11 @@ context means.
 
 ## Install
 
-`v0.4.0` is the current release:
+`v0.5.0` is the current repo version:
 
 ```bash
 pipx install companyctx
-companyctx --version   # companyctx 0.4.0
+companyctx --version   # companyctx 0.5.0
 companyctx fetch acme-bakery.com --mock --json
 ```
 
@@ -266,10 +268,10 @@ companyctx --help
   make cache evolution explicit (see [`docs/SPEC.md`](docs/SPEC.md) §Cache).
 - **Provider pluggability.** Every deterministic call class is discovered
   via Python entry points (`companyctx.providers`). Today
-  `site_text_trafilatura` (zero-key) and `smart_proxy_http` (user-keyed,
-  vendor-agnostic) are registered. Direct-API providers (Google Places,
-  Yelp, YouTube, Brave) and the `readability-lxml` bus-factor fallback are
-  scaffolded for later milestones. See
+  `site_text_trafilatura` (zero-key), `smart_proxy_http` (user-keyed,
+  vendor-agnostic), and `reviews_google_places` (direct-API reviews) are
+  registered. Yelp, YouTube, Brave, and the `readability-lxml`
+  bus-factor fallback remain deferred. See
   [`docs/PROVIDERS.md`](docs/PROVIDERS.md).
 - **robots.txt respected by default.** `--ignore-robots` is an explicit
   CLI-only flag; never settable via TOML or env.
@@ -284,8 +286,9 @@ Registered today (run `companyctx providers list` to introspect):
 |---|---|---|---|---|
 | `site_text_trafilatura` | zero-key | site_text | — | free |
 | `smart_proxy_http` | smart-proxy | smart_proxy | `COMPANYCTX_SMART_PROXY_URL` | per-call |
+| `reviews_google_places` | direct-api | reviews | `GOOGLE_PLACES_API_KEY` | per-1k |
 
-Scaffolded / deferred (roadmap):
+Deferred / candidate:
 
 | Slug | Tier | Category | Tracking |
 |---|---|---|---|
@@ -293,7 +296,6 @@ Scaffolded / deferred (roadmap):
 | `site_meta_extruct` | zero-key | site_meta | future milestone |
 | `social_discovery_site` | zero-key | social_discovery | future milestone |
 | `signals_site_heuristic` | zero-key | signals | future milestone |
-| `reviews_google_places` | direct-api | reviews | #7 |
 | `reviews_yelp_fusion` | direct-api | reviews | future milestone |
 | `social_counts_youtube` | direct-api | social_counts | future milestone |
 | `mentions_brave_stub` | direct-api | mentions | #58 |

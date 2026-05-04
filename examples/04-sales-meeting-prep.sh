@@ -83,7 +83,7 @@ echo "💡 Rep tip: mention one specific item above in the first"
 echo "   90 seconds of the call to prove you did your homework."
 echo "======================================================"
 
-# --- EXPECTED OUTPUT (v0.2 — pages populated, other slots null) ---
+# --- EXPECTED OUTPUT (current mock baseline — pages populated, other slots null) ---
 # ======================================================
 #   SALES CHEAT SHEET — acme-bakery
 # ======================================================
@@ -106,9 +106,8 @@ echo "======================================================"
 #    90 seconds of the call to prove you did your homework.
 # ======================================================
 #
-# Note: "not stated" and "no review data available" reflect v0.2
-# reality — data.signals / data.reviews / data.social stay null until
-# the site-heuristic and direct-API providers register. The jq
-# fallbacks in this script (// "not stated", // "n/a") are the exact
-# shape a production pipeline should use; they start filling in as
-# each provider ships without any script change.
+# Note: "not stated" and "no review data available" reflect the current
+# mock baseline — data.signals / data.reviews / data.social are still
+# null there. The jq fallbacks in this script (// "not stated", //
+# "n/a") are the exact shape a production pipeline should use; they
+# start filling in as providers are configured or shipped.

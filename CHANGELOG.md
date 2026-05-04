@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-04
+
 ### Changed — BREAKING (envelope schema)
 
 - **Renamed `path_traversal_rejected` → `fixture_path_traversal_rejected`
@@ -17,11 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   No new code was introduced; the behavior is unchanged. URL-path
   traversal remains out of scope — open a separate issue if a guard is
   needed. (COX-50 / #87.)
-- **`schema_version` remains `"0.4.0"` on this branch.** The rename is
-  schema-breaking even though the rest of the v0.4 line is already on
-  `main`; `companyctx schema` output, the Pydantic `Envelope(...)`
-  literal, and the fixtures corpus in this branch all advertise the
-  renamed code under the current `0.4.0` envelope discriminator.
+- **`schema_version` bumped to `"0.5.0"`.** The rename is schema-
+  breaking, so the envelope discriminator now advances with it.
+  `companyctx schema` output, the Pydantic `Envelope(...)` literal,
+  and the fixtures corpus all advertise the renamed code under the
+  `0.5.0` envelope contract.
+
+### Documentation
+
+- Added `docs/PARTNER-INTEGRATION.md` as the canonical downstream
+  integration contract.
+- Refreshed README / PROVIDERS / SCHEMA / SPEC / SKILL / `examples/`
+  to separate shipped providers from deferred candidates and to remove
+  stale v0.2-era prose labels from the gallery.
 
 ## [0.4.0] — 2026-04-23
 

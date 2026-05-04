@@ -174,8 +174,7 @@ if __name__ == "__main__":
 # 💾 baseline refreshed (2026-04-22T09:15:02.184210+00:00)
 #
 # Note: review-count diffs, copyright-year diffs, and social-handle
-# diffs rely on data.reviews / data.signals / data.social — all null
-# in v0.2 until the direct-API and site-heuristic providers register.
-# Until then, the script diffs pages.services + pages.tech_stack only;
-# the other branches are no-ops that wake up automatically once a
-# provider fills the relevant slot.
+# diffs rely on data.reviews / data.signals / data.social. On the
+# current mock baseline those slots are still null, so the script diffs
+# `pages.services` + `pages.tech_stack` only; the other branches wake up
+# automatically once a provider fills the relevant slot.
