@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "companyctx"
-version = "0.4.0"
+version = "0.5.0"
 description = "Deterministic B2B company context router. Zero keys. Schema-locked JSON your agent pipelines can actually trust."
 readme = "README.md"
 requires-python = ">=3.10"

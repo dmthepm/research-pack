@@ -16,7 +16,7 @@ floor correction (``EMPTY_RESPONSE_BYTES`` 64 → 1024 — same ``Literal``
 members, tighter threshold for ``empty_response``) and the COX-49
 NXDOMAIN routing fix (``unsafe_url:dns_resolve_failure`` →
 ``no_provider_succeeded`` instead of ``ssrf_rejected``; no Literal
-change, classifier-only), and renames ``path_traversal_rejected`` →
+change, classifier-only). v0.5.0 renames ``path_traversal_rejected`` →
 ``fixture_path_traversal_rejected`` to match the code's actual scope
 (``--mock`` fixture-slug escapes only; it does not guard URL-path
 traversal).
@@ -29,7 +29,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-SCHEMA_VERSION = "0.4.0"
+SCHEMA_VERSION = "0.5.0"
 
 EnvelopeStatus = Literal["ok", "partial", "degraded"]
 ProviderStatus = Literal["ok", "degraded", "failed", "not_configured"]
@@ -170,7 +170,7 @@ class Envelope(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["0.4.0"]
+    schema_version: Literal["0.5.0"]
     status: EnvelopeStatus
     data: CompanyContext
     provenance: dict[str, ProviderRunMetadata] = Field(default_factory=dict)
