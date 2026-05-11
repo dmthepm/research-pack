@@ -74,7 +74,7 @@ dev = [
   # lint/test toolchain is a deliberate bump, not a silent drift. See
   # docs/OSS-HYGIENE.md §5 and the v0.2 hygiene slice bundled into this PR.
   "ruff~=0.15",
-  "mypy~=1.20",
+  "mypy>=1.20,<3.0",
   "pytest~=9.0",
   "pytest-cov~=7.0",
   "hypothesis~=6.100",
